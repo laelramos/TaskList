@@ -61,7 +61,7 @@ export default function App() {
 
   return (
      <SafeAreaView  style={styles.container}>
-      <StatusBar backgroundColor= '#171d31' barStyle="light-content"/>
+      <StatusBar backgroundColor= '#1e1731' barStyle="light-content"/>
 
       <View style={styles.content}>
         <Text style={styles.title}> Minhas Tarefas </Text>
@@ -123,7 +123,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    backgroundColor: '#171d31'
+    backgroundColor: '#1e1731'
   },
   title:{
     marginTop: 10,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
 
   modal:{
     flex:1,
-    backgroundColor:'#171d31',
+    backgroundColor:'#1e1731',
     },
   
   modalHeader:{
