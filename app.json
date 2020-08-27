@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "SmartGarden",
-    "slug": "SmartGarden",
+    "name": "TaskList",
+    "slug": "TaskList",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,9 @@
     "androidStatusBar":{
       "barStyle": "light-content",
       "backgroundColor": "#000"
+    },
+    "android":{
+      "package":"com.neodsg.tasklist"
     }
   }
 }
