@@ -1,7 +1,6 @@
 
-import React, { useState } from 'react';
-import {  StyleSheet, Text, View, SafeAreaView, StatusBar, 
-          TouchableOpacity, FlatList, Modal, TextInput} from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import {  StyleSheet, Text, View, SafeAreaView, AsyncStorage, StatusBar, TouchableOpacity, FlatList, Modal, TextInput} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import TaskList from './src/components/TaskList';
 import * as Animatable from 'react-native-animatable';
@@ -9,15 +8,55 @@ import * as Animatable from 'react-native-animatable';
 const AnimatableBtn = Animatable.createAnimatableComponent(TouchableOpacity);
 
 export default function App() {
-  const [task, setTask] = useState([
-    {key: 1, task: 'compra pao'},
-    {key: 2, task: 'compra pao'},
-    {key: 3, task: 'compra pao'},
-    {key: 4, task: 'compra pao'},
-    {key: 5, task: 'compra pao'},
-  ]);
-  
-const [open, setOpen] = useState(false);
+  const [task, setTask] = useState([]);  
+  const [open, setOpen] = useState(false);
+  const [input, setIput] = useState('');
+
+  //buscando tarefas ao iniciar o ap
+  useEffect(() => {
+    
+    async function loadTasks(){
+      const taskStorage = await AsyncStorage.getItem('@task');
+
+      if(taskStorag){
+        setTask(JSON.parse(taskStorage));
+      }
+    }
+
+    loadTasks();
+
+  }, []);
+
+  //salvando caso haja alteração
+  useEffect(() => {
+
+    async function saveTasks(){
+      await AsyncStorage.setItem('@task', JSON.stringify(task));
+    }
+    
+    saveTasks();
+
+  }, [task]);
+
+
+  function handleAdd (){
+    if(input === '') return;
+
+    const data = {
+      key: input,
+      task: input
+    };
+
+    setTask([...task, data]);
+    setOpen(false);
+    setIput('');
+  }
+
+
+  const handleDelete = useCallback ((data) => {
+    const find = task.filter(r =>  r.key != data.key);
+    setTask(find);
+  })
 
 
   return (
@@ -34,7 +73,7 @@ const [open, setOpen] = useState(false);
     showsHorizontalScrollIndicator={false}
     data={task}
     keyExtractor={ (item) => String(item.key) }
-    renderItem={ ({item}) => <TaskList data ={item} />}
+    renderItem={ ({item}) => <TaskList data ={item} handleDelete={handleDelete} />}
     />
 
     <Modal animationType="slide" transparent={false} visible={open}>
@@ -47,18 +86,22 @@ const [open, setOpen] = useState(false);
           <Text style={styles.modalTitle}>Nova Tarefa</Text>
         </View>
 
-        <View style={styles.modalBody}>
+        <Animatable.View style={styles.modalBody} animation= 'fadeInUp' useNativeDriver>
           <TextInput
           multiline={true}
+          placeholderTextColor="#747474"
+          autoCorrect={false}
           placeholder="O que precisa fazer hoje?"
           style={styles.input}
-          />
+          value={input}
+          onChangeText={ (texto) => setIput(texto)}
+          /> 
 
-          <TouchableOpacity style={styles.handleAdd}>
+          <TouchableOpacity style={styles.handleAdd} onPress={handleAdd}>
             <Text style ={styles.handleAddText} > Cadastrar </Text>
           </TouchableOpacity>
 
-        </View>
+        </Animatable.View>
 
       </SafeAreaView>
     </Modal>
