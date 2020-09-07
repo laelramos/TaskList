@@ -18,7 +18,7 @@ export default function App() {
     async function loadTasks(){
       const taskStorage = await AsyncStorage.getItem('@task');
 
-      if(taskStorag){
+      if(taskStorage){
         setTask(JSON.parse(taskStorage));
       }
     }
